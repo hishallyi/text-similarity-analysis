@@ -36,30 +36,7 @@ def gender_bias_on_pair_texts(file_path1, file_path2):
     return distance
 
 
-def get_filename_and_relative_paths(root_dir):
-    """
-    读取新闻类型文件夹中的Word文档内容
-    @param root_dir:
-    @return:
-    """
-    # Dictionary to store Word file names and their relative paths
-    path_dict = {}
-
-    # Traverse the root directory
-    for news_type in os.listdir(root_dir):
-        news_type_path = os.path.join(root_dir, news_type)
-        if os.path.isdir(news_type_path):
-            # Traverse the Word files in the current news type folder
-            for file_name in os.listdir(news_type_path):
-                if file_name.endswith('.docx'):
-                    file_path = os.path.join(news_type_path, file_name)
-                    # Store the relative path of the Word file
-                    path_dict[file_name] = file_path
-
-    return path_dict
-
-
-def gender_bias_on_news(real_news_root_dir, ai_news_root_dir):
+def gender_bias_on_all_news(real_news_root_dir, ai_news_root_dir):
     """
     计算真实新闻和AI新闻的综合性别偏见
     @param real_news_root_dir:
