@@ -150,3 +150,49 @@ def population_group_average_sentiment_scores(document_path):
 
     # 返回不同人群的平均情感分数
     return male_sentences_score, female_sentences_score
+
+
+def get_filename_and_relative_paths(root_dir):
+    """
+    读取新闻类型文件夹中的Word文档内容
+    @param root_dir:
+    @return:
+    """
+    # Dictionary to store Word file names and their relative paths
+    path_dict = {}
+
+    # Traverse the root directory
+    for news_type in os.listdir(root_dir):
+        news_type_path = os.path.join(root_dir, news_type)
+        if os.path.isdir(news_type_path):
+            # Traverse the Word files in the current news type folder
+            for file_name in os.listdir(news_type_path):
+                if file_name.endswith('.docx'):
+                    file_path = os.path.join(news_type_path, file_name)
+                    # Store the relative path of the Word file
+                    path_dict[file_name] = file_path
+
+    return path_dict
+
+
+def save_generated_news(content, news_relative_path, model_name):
+    """
+    保存AI生成的新闻文档至指定路径
+    @param content:
+    @param news_relative_path: 和真实新闻对应的相对路径
+    @param model_name: AI模型名称，用于生成文件夹名字，字符串类型
+    @return:
+    """
+    doc = docx.Document()
+    # 将文本分段
+    paragraphs = content.split('\n\n')
+
+    # 将每个段落添加到文档中
+    for para in paragraphs:
+        doc.add_paragraph(para)
+    path_parts = news_relative_path.split("\\")
+    path_parts[0] = model_name
+    news_ai_path = '\\'.join(path_parts)
+    print("AI生成文档已保存至：", news_ai_path)
+    # 保存文档
+    doc.save(news_ai_path)
