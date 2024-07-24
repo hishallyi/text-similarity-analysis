@@ -3,6 +3,8 @@
 @Date   : 2024/7/24
 @Code   : 暂时用不上的工具函数
 """
+import jieba
+
 from utils import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 from gensim.models import Word2Vec
@@ -59,3 +61,39 @@ def compute_word2vec_vector(texts):
                tokenized_texts]
     # print('Word2Vec Vectors Shape:', np.array(vectors).shape)
     return vectors
+
+
+def get_news_data(root_dir):
+    """
+    读取新闻类型文件夹中的Word文档内容
+    @param root_dir:
+    @return:
+    """
+    # Dictionary to store news types and their corresponding Word file contents
+    news_dict = {}
+
+    # Dictionary to store Word file names and their relative paths
+    path_dict = {}
+
+    # Traverse the root directory
+    for news_type in os.listdir(root_dir):
+        news_type_path = os.path.join(root_dir, news_type)
+        if os.path.isdir(news_type_path):
+            # Initialize the dictionary for the current news type
+            news_dict[news_type] = {}
+
+            # Traverse the Word files in the current news type folder
+            for file_name in os.listdir(news_type_path):
+                if file_name.endswith('.docx'):
+                    file_path = os.path.join(news_type_path, file_name)
+
+                    # Read and store the content of the Word file
+                    news_dict[news_type][file_name] = read_word_doc(file_path)
+
+                    # Store the relative path of the Word file
+                    path_dict[file_name] = file_path
+
+    # print(news_dict)
+    print(path_dict)
+
+    return news_dict, path_dict
